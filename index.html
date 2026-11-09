@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projective Plane Explorer — from homogeneous ℝ³ to ℝP²</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>Projective Plane Explorer</h1>
+  <p class="sub">Curves in 3D homogeneous space <b>ℝ³</b> project through the origin onto the 2D projective plane
+     <b>ℝP²</b>. Every point <b>p</b> and its ray <b>[λx : λy : λw]</b> become a single projective point.</p>
+</header>
+
+<section id="controls">
+  <div class="row">
+    <select id="sel" title="Pick a curve in homogeneous space"></select>
+    <button id="btnPlay" class="btn" title="Play / pause (space)">⏸ pause</button>
+    <label class="mini">speed <input type="range" id="rngSpeed" min="0.1" max="4" step="0.1" value="1"></label>
+    <label id="lblCustom" class="custom-ctl">
+      x(t) <input type="text" id="cx" value="1.2*cos(t)+0.5*cos(3*t)">
+      y(t) <input type="text" id="cy" value="1.2*sin(t)+0.5*sin(3*t)">
+      w(t) <input type="text" id="cw" value="1+0.5*sin(2*t)">
+      t∈[<input type="text" id="ct0" value="0">,<input type="text" id="ct1" value="6.2832">]
+      <button id="btnApply" class="btn">apply</button>
+    </label>
+  </div>
+  <div class="row">
+    <label id="lblRbez" class="custom-ctl">
+      homogeneous control points — one per line: <code>x&nbsp;y&nbsp;[weight]</code>
+      <textarea id="rbezPts" rows="4" spellcheck="false">1 0 1
+1 1 0.70710678
+0 1 1</textarea>
+      <button id="btnRbez" class="btn">apply</button>
+    </label>
+  </div>
+  <div class="row">
+    <label class="mini">t <input type="range" id="rngT" min="0" max="1" step="0.001" value="0"></label>
+    <span id="tval" class="mono">0.00</span>
+    <span class="checks">
+      <label><input type="checkbox" id="chkCone" checked> cone</label>
+      <label><input type="checkbox" id="chkPlane" checked> chart plane w=1</label>
+      <label><input type="checkbox" id="chkHoriz" checked> horizon w=0</label>
+      <label><input type="checkbox" id="chkSphere" checked> sphere S²</label>
+      <label><input type="checkbox" id="chkSphereModel"> curve on S²</label>
+      <label><input type="checkbox" id="chkAnti" checked> antipodal −p</label>
+    </span>
+  </div>
+  <div id="desc" class="desc"></div>
+</section>
+
+<main id="panes">
+  <div class="pane">
+    <h2>Homogeneous space&nbsp;<span class="tag">ℝ³ (x, y, w)</span></h2>
+    <div class="cwrap"><canvas id="c3"></canvas></div>
+    <p class="hint">drag = rotate &nbsp;·&nbsp; scroll = zoom</p>
+  </div>
+  <div class="pane">
+    <h2>Projective plane&nbsp;<span class="tag">affine chart (u, v) = (x/w, y/w)</span></h2>
+    <div class="cwrap"><canvas id="c2"></canvas></div>
+    <p class="hint">drag = pan &nbsp;·&nbsp; scroll = zoom &nbsp;·&nbsp; dashed border = line at infinity w = 0</p>
+  </div>
+</main>
+
+<footer>
+  <div id="status" class="mono">—</div>
+  <p class="note">
+    The projective plane is the set of <em>lines through the origin</em> of ℝ³: &nbsp;[x : y : w] = [λx : λy : λw], λ ≠ 0.
+    The right pane draws the affine chart w = 1; points of the curve with w &lt; 0 are drawn through their antipodal
+    representative −p (dashed), so <b>every</b> projective point except ℓ<sub>∞</sub> = {[x : y : 0]} gets a finite spot.
+    Watch a hyperbola: it leaves the chart through one point at infinity and comes back through the antipodal one —
+    in ℝP² it is a <b>closed loop</b>. Equivalently, ℝP² is the sphere S² with antipodal points identified (S²/±1).
+  </p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
