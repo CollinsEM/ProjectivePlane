@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bézier Spline Studio — subdivision & C0/C1 continuity</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>Bézier Spline Studio</h1>
+  <p class="sub">Splitting a Bézier at a parameter <b>t</b> produces <b>two</b> Bézier pieces — the left and right edges of the
+     de&nbsp;Casteljau triangle. Here the split is <b>committed</b>: the two pieces become independently editable control
+     polygons joined at a shared point (<b>C0</b>). Drag the shared point to move both pieces; toggle <b>C1</b> to couple the
+     two tangent handles so the joint stays smooth. After the split, <b>t</b> no longer changes the shape — it only slides the
+     two evaluation points <b>C<sub>L</sub>(t)</b> and <b>C<sub>R</sub>(t)</b> along the fixed pieces.</p>
+</header>
+
+<section id="controls">
+  <div class="row">
+    <select id="sel" title="Pick a preset polygon"></select>
+    <button id="btnAdd" class="btn" title="Add a control point">＋ add</button>
+    <button id="btnRemove" class="btn" title="Remove the selected point">－ remove</button>
+    <button id="btnClear" class="btn" title="Reset to the current preset">reset</button>
+    <button id="btnPlay" class="btn" title="Play / pause t (slides the eval points once split)">▶ play</button>
+    <label class="mini">speed <input type="range" id="rngSpeed" min="0.2" max="4" step="0.1" value="1"></label>
+    <label class="mini">t <input type="range" id="rngT" min="0" max="1" step="0.001" value="0.5"></label>
+    <span id="lblT" class="tval">0.500</span>
+  </div>
+  <div class="row">
+    <span class="checks">
+      <label><input type="checkbox" id="chkNet" checked> control net</label>
+      <label><input type="checkbox" id="chkCurve" checked> curve</label>
+      <label><input type="checkbox" id="chkHull"> convex hull</label>
+      <label><input type="checkbox" id="chkTrace" checked> trace C(t)</label>
+      <label><input type="checkbox" id="chkLabels" checked> labels</label>
+      <label><input type="checkbox" id="chkC1"> C1 continuity</label>
+    </span>
+  </div>
+  <div class="row ops">
+    <span class="seg"><b>subdivide</b> &nbsp;<button id="btnSubdivide" class="btn" title="Split the curve into two editable Bézier pieces at the current t (the split then stays fixed)">✂ split here</button><button id="btnMerge" class="btn" title="Merge the two pieces back into one curve" disabled>⤳ merge</button></span>
+  </div>
+  <div id="desc" class="desc"></div>
+</section>
+
+<main>
+  <div class="cwrap"><canvas id="cv"></canvas></div>
+  <p class="hint">drag a point to move it &nbsp;·&nbsp; click a point to select it &nbsp;·&nbsp; click empty space to add a point &nbsp;·&nbsp; <kbd>Delete</kbd> removes the selected &nbsp;·&nbsp; <kbd>Space</kbd> plays/pauses &nbsp;·&nbsp; the gold <b>C0</b> point is shared by both pieces &nbsp;·&nbsp; scroll = zoom &nbsp;·&nbsp; middle-drag = pan</p>
+</main>
+
+<footer>
+  <div id="status" class="mono">—</div>
+  <p class="note">
+    <b>C0 continuity</b> (always on) means the two pieces literally share the join point — move it and <b>both</b> curves move.
+    <b>C1 continuity</b> (the toggle) adds <b>tangent</b> continuity: the two control points either side of the join are mirror
+    images across it, so dragging one snaps the other and the joint has no crease. With C1 <b>off</b> every point moves freely,
+    so you can see the difference between a merely joined (C0) and a smooth (C1) spline. Subdivision itself is the de&nbsp;Casteljau
+    triangle: the left piece's net is the triangle's left edge, the right piece's net its right edge. (The single-curve de&nbsp;Casteljau
+    construction and degree elevation live in the companion <b>Bezier</b> demo.)
+  </p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

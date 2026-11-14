@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bézier Curve Studio — control net & de Casteljau construction</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>Bézier Curve Studio</h1>
+  <p class="sub">A Bézier curve is built from its <b>control net</b> by the <b>de&nbsp;Casteljau</b> algorithm: at a
+     parameter <b>t</b>, each level replaces a polygon by the polygon of segment points <b>(1−t)·A + t·B</b>. The
+     polygons shrink toward a single point — <b>C(t)</b>. Add and drag points and watch the nested linear approximations converge.</p>
+</header>
+
+<section id="controls">
+  <div class="row">
+    <select id="sel" title="Pick a preset polygon"></select>
+    <button id="btnAdd" class="btn" title="Add a control point">＋ add</button>
+    <button id="btnRemove" class="btn" title="Remove the selected point">－ remove</button>
+    <button id="btnClear" class="btn" title="Reset to the current preset">reset</button>
+    <button id="btnPlay" class="btn" title="Play / pause the de Casteljau sweep">▶ play</button>
+    <label class="mini">speed <input type="range" id="rngSpeed" min="0.2" max="4" step="0.1" value="1"></label>
+    <label class="mini">t <input type="range" id="rngT" min="0" max="1" step="0.001" value="0.5"></label>
+    <span id="lblT" class="tval">0.500</span>
+  </div>
+  <div class="row">
+    <span class="checks">
+      <label><input type="checkbox" id="chkNet" checked> control net</label>
+      <label><input type="checkbox" id="chkLevels" checked> de Casteljau levels</label>
+      <label><input type="checkbox" id="chkCurve" checked> curve</label>
+      <label><input type="checkbox" id="chkHull"> convex hull</label>
+      <label><input type="checkbox" id="chkTrace" checked> trace C(t)</label>
+      <label><input type="checkbox" id="chkLabels" checked> labels</label>
+      <label><input type="checkbox" id="chkElev"> elevate view</label>
+    </span>
+  </div>
+  <div class="row ops">
+    <label class="mini">elevate degree <button id="btnElevate" class="btn" title="Replace the curve with its degree-elevated form (same curve, +1 point)">↥ once</button></label>
+    <label class="mini">elevations <input type="range" id="rngElev" min="0" max="10" step="1" value="3"></label>
+    <span id="lblElev" class="tval">3</span>
+  </div>
+  <div id="desc" class="desc"></div>
+</section>
+
+<main>
+  <div class="cwrap"><canvas id="cv"></canvas></div>
+  <p class="hint">drag a point to move it &nbsp;·&nbsp; click a point to select it &nbsp;·&nbsp; click empty space to add a point &nbsp;·&nbsp; <kbd>Delete</kbd> removes the selected &nbsp;·&nbsp; <kbd>Space</kbd> plays/pauses &nbsp;·&nbsp; scroll = zoom &nbsp;·&nbsp; middle-drag = pan</p>
+</main>
+
+<footer>
+  <div id="status" class="mono">—</div>
+  <p class="note">
+    With <b>n+1</b> control points you get a Bézier curve of <b>degree n</b>. The de&nbsp;Casteljau construction has
+    <b>n</b> levels: the control net (level 0) is replaced <b>n</b> times by shorter polygons until one point remains —
+    that point is <b>C(t)</b> on the curve. Every C(t) lies inside the <b>convex hull</b> of the net. Moving any control
+    point reshapes the <b>whole</b> curve — a Bézier has <b>no local control</b>. <b>Elevate</b> re-expresses the <b>same</b>
+    curve at a higher degree — repeated elevation pulls the net onto the curve. Splitting a curve into two editable
+    pieces (subdivision) with <b>C0</b> / <b>C1</b> continuity lives in the companion <b>BezierSpline</b> demo.
+  </p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projective Manifold Explorer — surfaces from homogeneous ℝ³ to ℝP²</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>Projective Manifold Explorer</h1>
+  <p class="sub">A surface <b>(u, v) ↦ (x, y, w)</b> in 3D homogeneous space <b>ℝ³</b> projects through the origin onto the
+     2D projective plane <b>ℝP²</b>. Every point <b>p</b> and its antipode <b>−p</b> (same ray <b>[λx : λy : λw]</b>)
+     become one projective point; points with <b>w = 0</b> fall on the line at infinity.</p>
+</header>
+
+<section id="controls">
+  <div class="row">
+    <select id="sel" title="Pick a surface in homogeneous space"></select>
+    <button id="btnPlay" class="btn" title="Play / pause the (u,v) walk">▶ play</button>
+    <label class="mini">speed <input type="range" id="rngSpeed" min="0.1" max="4" step="0.1" value="1"></label>
+    <label id="lblCustom" class="custom-ctl">
+      x(u,v) <input type="text" id="cx" value="2*u-1">
+      y(u,v) <input type="text" id="cy" value="2*v-1">
+      w(u,v) <input type="text" id="cw" value="1">
+      <button id="btnApply" class="btn">apply</button>
+    </label>
+  </div>
+  <div class="row">
+    <span class="checks">
+      <label><input type="checkbox" id="chkSurf" checked> surface</label>
+      <label><input type="checkbox" id="chkWire"> wireframe</label>
+      <label><input type="checkbox" id="chkCone"> rays O→p</label>
+      <label><input type="checkbox" id="chkHoriz" checked> horizon w=0</label>
+      <label><input type="checkbox" id="chkPlane" checked> chart plane w=1</label>
+      <label><input type="checkbox" id="chkSphere" checked> sphere S²</label>
+      <label><input type="checkbox" id="chkAnti"> antipodal −p</label>
+      <label><input type="checkbox" id="chkBox" checked> param box</label>
+    </span>
+  </div>
+  <div id="desc" class="desc"></div>
+</section>
+
+<main id="panes">
+  <div class="pane">
+    <h2>Homogeneous space&nbsp;<span class="tag">ℝ³ (x, y, w)</span></h2>
+    <div class="cwrap"><canvas id="c3"></canvas></div>
+    <p class="hint">drag = rotate &nbsp;·&nbsp; scroll = zoom &nbsp;·&nbsp; w is the 3rd (homogeneous) axis</p>
+  </div>
+  <div class="pane">
+    <h2>Projective plane&nbsp;<span class="tag">affine chart (a, b) = (x/w, y/w)</span></h2>
+    <div class="cwrap"><canvas id="c2"></canvas><canvas id="pbox" class="pbox"></canvas></div>
+    <p class="hint">drag = pan &nbsp;·&nbsp; scroll = zoom &nbsp;·&nbsp; dashed border = line at infinity w = 0 &nbsp;·&nbsp; box = (u, v) domain</p>
+  </div>
+</main>
+
+<footer>
+  <div id="status" class="mono">—</div>
+  <p class="note">
+    A 2-parameter surface <em>S(u, v) = (x, y, w)</em> lives in homogeneous ℝ³. Projecting each point through the origin
+    onto the chart plane <b>w = 1</b> gives the affine point <b>(a, b) = (x/w, y/w)</b> of ℝP². The left pane draws the
+    surface in (x, y, w); the right pane draws its shadow in the projective chart. The surface is coloured by the sign of
+    <b>w</b>: <span class="pos">teal = w &gt; 0</span> (upper representative), <span class="neg">magenta = w &lt; 0</span>
+    (charted through the antipode — the <b>same</b> projective point). Where <b>w → 0</b> the chart runs off to the line at
+    infinity <b>ℓ∞</b> (the dashed window border). The sphere preset is the classic picture: ℝP² = S² with antipodal points
+    identified (S²/±1).
+  </p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

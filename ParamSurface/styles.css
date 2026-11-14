@@ -1,0 +1,160 @@
+:root {
+  --bg: #0d1220;
+  --panel: #151c2e;
+  --panel2: #1b2440;
+  --ink: #dbe4f5;
+  --dim: #8b98b8;
+  --accent: #6ee7ff;
+  --accent2: #b794f6;
+  --warn: #ff7a8a;
+  --border: #263252;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 14px 18px 24px;
+  background: radial-gradient(1200px 700px at 30% -10%, #17203a 0%, var(--bg) 55%);
+  color: var(--ink);
+  font: 14px/1.45 "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+header h1 {
+  margin: 0 0 2px;
+  font-size: 22px;
+  letter-spacing: .3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+header .sub { margin: 0 0 10px; color: var(--dim); max-width: 78ch; }
+header .sub b { color: var(--ink); }
+
+#controls {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+
+#controls .row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+#controls .row + .row { margin-top: 8px; }
+
+select, input[type="text"], textarea {
+  background: var(--panel2);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 9px;
+  font: inherit;
+}
+textarea {
+  font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+  font-size: 13px;
+  width: 20em;
+  resize: vertical;
+  line-height: 1.4;
+}
+input[type="text"] { width: 14em; }
+#degU, #degV { width: 4em; }
+
+.btn {
+  background: linear-gradient(180deg, #233258, #1a2542);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font: inherit;
+}
+.btn:hover { border-color: var(--accent); }
+
+label.mini, .checks label { color: var(--dim); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.checks label { margin-right: 4px; }
+.checks { display: inline-flex; flex-wrap: wrap; gap: 10px; }
+input[type="range"] { accent-color: var(--accent); }
+#ru, #rv { width: 130px; }
+#rngSpeed { width: 90px; }
+
+.custom-ctl { display: none; color: var(--dim); align-items: center; gap: 6px; flex-wrap: wrap; }
+.custom-ctl.show { display: inline-flex; }
+
+.desc {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(110, 231, 255, .05);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  color: #c3cfe8;
+  max-width: 110ch;
+}
+.desc b { color: var(--accent); }
+.desc.err { border-left-color: var(--warn); background: rgba(255, 122, 138, .07); color: var(--warn); }
+
+#panes { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.pane {
+  flex: 1 1 560px;
+  min-width: 360px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px 6px;
+}
+
+.pane h2 { margin: 0 0 8px; font-size: 14px; font-weight: 600; color: var(--dim); }
+.pane h2 .tag { color: var(--accent); font-weight: 400; }
+
+.cwrap { position: relative; width: 100%; aspect-ratio: 4 / 3; }
+canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border-radius: 8px;
+  background: #0a0f1b;
+  border: 1px solid #1d2745;
+  cursor: grab;
+  touch-action: none;
+}
+canvas:active { cursor: grabbing; }
+
+/* ---- parameter-domain box (overlay on the 3-D canvas) ---- */
+.pbox {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 196px;
+  height: 196px;
+  z-index: 3;
+  cursor: crosshair;
+  /* transparent pointer-capture overlay only — the box itself is drawn onto the
+     3-D canvas (a separate overlay canvas ghosts in Firefox). Keep it fully
+     transparent so the drawn box shows through. */
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.hint { color: #5b6a8c; font-size: 12px; margin: 6px 2px 4px; }
+
+footer { margin-top: 12px; }
+#status {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  color: var(--ink);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.mono { font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace; font-size: 13px; }
+.mono .neg { color: var(--warn); }
+.mono .pos { color: #7ee2a8; }
+.mono .k { color: var(--dim); }
+
+.note { color: var(--dim); max-width: 110ch; margin: 4px 2px; }
+.note b { color: var(--ink); }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parametric Surface Explorer — a domain square (u, v) mapped into ℝ³</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>Parametric Surface Explorer</h1>
+  <p class="sub">A surface patch is a map from a <b>2-D parameter domain</b> into space:
+     <b>(u, v) ∈ [0,1]²  ↦  S(u, v) = (x, y, z)</b>. Drag the point in the little
+     <b>param-domain box</b> (bottom-right of the 3-D view) and watch the matching point glide over the surface.
+     A curve had one parameter (a slider); a surface has two — its domain is a <b>square</b>.</p>
+</header>
+
+<section id="controls">
+  <div class="row">
+    <select id="sel" title="Pick a surface patch"></select>
+    <button id="btnPlay" class="btn" title="Play / pause the (u,v) walk">▶ play</button>
+    <label class="mini">speed <input type="range" id="rngSpeed" min="0.1" max="4" step="0.1" value="1"></label>
+    <label class="mini">u <input type="range" id="ru" min="0" max="1" step="0.001" value="0.5"></label>
+    <label class="mini">v <input type="range" id="rv" min="0" max="1" step="0.001" value="0.5"></label>
+    <span id="uvval" class="mono">u = 0.50 · v = 0.50</span>
+  </div>
+  <div class="row">
+    <label id="lblCustom" class="custom-ctl">
+      x(u,v) <input type="text" id="cx" value="2*cos(pi*u)*(1+v*cos(pi*v))">
+      y(u,v) <input type="text" id="cy" value="2*sin(pi*u)*(1+v*cos(pi*v))">
+      z(u,v) <input type="text" id="cz" value="4*v*sin(pi*v)">
+      <button id="btnApply" class="btn">apply</button>
+    </label>
+  </div>
+  <div class="row">
+    <label id="lblRbez" class="custom-ctl">
+      degree U <input type="text" id="degU" value="3"> ·
+      degree V <input type="text" id="degV" value="3"> —
+      control net, one point per line: <code>x y z [weight]</code> (row = v, left→right = u)
+      <textarea id="rbezGrid" rows="4" spellcheck="false">-1 -1 0 1
+1 -1 0 1
+1 1 0 1
+-1 1 0 1
+-1 -1 1 1
+1 -1 1 1
+1 1 1 1
+-1 1 1 1</textarea>
+      <button id="btnRbez" class="btn">apply</button>
+    </label>
+  </div>
+  <div class="row">
+    <span class="checks">
+      <label><input type="checkbox" id="chkSurf" checked> surface</label>
+      <label><input type="checkbox" id="chkWire" checked> wireframe</label>
+      <label><input type="checkbox" id="chkNet"> control net</label>
+      <label><input type="checkbox" id="chkIso" checked> iso-curves</label>
+      <label><input type="checkbox" id="chkTan"> tangent plane</label>
+      <label><input type="checkbox" id="chkNorm" checked> normal</label>
+      <label><input type="checkbox" id="chkBack"> back faces</label>
+      <label><input type="checkbox" id="chkBox" checked> param box</label>
+    </span>
+  </div>
+  <div id="desc" class="desc"></div>
+</section>
+
+<main id="panes">
+  <div class="pane">
+    <h2>Surface patch <span class="tag">S(u, v) in ℝ³ · domain [0,1]²</span></h2>
+    <div class="cwrap">
+      <canvas id="c3"></canvas>
+      <canvas id="pbox" class="pbox" title="Parameter domain: drag the dot (both), or the u / v ticks on the edges (one at a time)"></canvas>
+    </div>
+    <p class="hint">drag the view = rotate &nbsp;·&nbsp; scroll = zoom &nbsp;·&nbsp;
+       drag the corner <b>param box</b> = move the point (u, v) on the surface</p>
+  </div>
+</main>
+
+<footer>
+  <div id="status" class="mono">—</div>
+  <p class="note">
+    A <b>parametric patch</b> is a function <b>S(u, v)</b> from the unit square into ℝ³. The <b>u</b>- and <b>v</b>-iso-lines
+    through the current point are the surface's coordinate curves; the <b>tangent plane</b> is spanned by the partials
+    <b>S<sub>u</sub></b>, <b>S<sub>v</sub></b> and has normal <b>S<sub>u</sub> × S<sub>v</sub></b>.
+    For a <b>tensor-product Bézier patch</b> the surface is the projection of a polynomial net of control points
+    <b>P<sub>ij</sub></b>; giving the nodes <b>weights</b> makes it a <b>rational</b> patch — a polynomial patch in homogeneous
+    ℝ⁴ projected down, exactly the idea of the <i>Projective Plane</i> demo (a rational Bézier <i>curve</i> there becomes a
+    rational Bézier <i>surface</i> here).
+  </p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -102,7 +102,9 @@ const PRESETS = [
         + 'Note w(t) is itself a Bézier curve of the weights, so with <b>all weights positive it never reaches the '
         + 'horizon</b> — that is the convex-hull property, projectively. Try weight <b>−1</b>: the curve touches ℓ∞ '
         + 'exactly once (a parabolic segment, like the critical-tilt circle above); weight <b>−2</b>: it crosses '
-        + 'w = 0 twice and re-enters through the antipodal point of ℓ∞. Weights all 1 = plain polynomial Bézier.',
+        + 'w = 0 twice and re-enters through the antipodal point of ℓ∞. '
+        + 'The <b>order</b> field chooses how many of the entered control points are used (degree = order − 1); if '
+        + 'fewer points are entered than the order, all entered points are used. Weights all 1 = plain polynomial Bézier.',
     t0: 0, t1: 1,
     f: null },
 
@@ -121,7 +123,7 @@ const S = {
   t0: PRESETS[0].t0, t1: PRESETS[0].t1,
   N: 1400,
   ts: [], pts: [], us: [], vs: [],
-  t: 0, playing: true, speed: 1,
+  t: 0, playing: false, speed: 1,
   yaw: 0.9, pitch: 0.42, zoom3: 1, ext: 3.4,
   u0: 0, v0: 0, win: 4.4,
 };
@@ -656,6 +658,10 @@ function bezierH(cp, t) {
 function applyRBezier() {
   try {
     const cp = parseRBezier($('rbezPts').value);
+    // order = number of control points actually used (degree = order − 1);
+    // if order < number of entered points, only the leading `order` points are used
+    const order = Math.max(2, Math.min(parseInt($('rbezOrder').value, 10) || 2, cp.length));
+    cp.length = order;                       // truncate to the requested order
     RBEZ = cp;
     S.f = t => bezierH(RBEZ, clamp(t, 0, 1));
     S.t0 = 0; S.t1 = 1;
@@ -671,7 +677,7 @@ function applyRBezier() {
 
 function applyCustom() {
   const mk = (src, name) => {
-    const body = `"use strict";const {sin,cos,tan,asin,acos,atan2,sinh,cosh,tanh,sqrt,abs,exp,log,pow,sign,floor,min,max,PI,TAU}=Math;return (${src});`;
+    const body = `"use strict";const {sin,cos,tan,asin,acos,atan2,sinh,cosh,tanh,sqrt,abs,exp,log,pow,sign,floor,min,max}=Math,PI=Math.PI,TAU=Math.PI*2;return (${src});`;
     const fn = new Function('t', body);
     try { fn(0.7); } catch (e) { throw new Error(`${name}: ${e.message}`); }
     return fn;
@@ -700,19 +706,37 @@ $('btnApply').addEventListener('click', () => { loadPreset(PRESETS.find(p => p.i
 $('btnRbez').addEventListener('click', () => { loadPreset(PRESETS.find(p => p.id === 'rbez')); });
 
 const btnPlay = $('btnPlay');
-btnPlay.addEventListener('click', () => {
+const togglePlay = () => {
   S.playing = !S.playing;
   btnPlay.textContent = S.playing ? '⏸ pause' : '▶ play';
+};
+btnPlay.addEventListener('click', togglePlay);
+
+/* Space = play/pause, but only when NOT editing a text field: a global
+   space handler would swallow spaces typed into the rational Bézier / custom
+   curve editors, so let form controls keep their native behavior. */
+function isFormControl(el) {
+  if (!el) return false;
+  const tag = el.tagName;
+  if (tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable) return true;
+  if (tag === 'INPUT') {
+    const type = (el.type || '').toLowerCase();
+    return ['text', 'search', 'url', 'email', 'tel', 'password', 'number',
+            'range', 'checkbox', 'radio'].includes(type);
+  }
+  return false;
+}
+document.addEventListener('keydown', (e) => {
+  if (e.code !== 'Space' && e.key !== ' ') return;
+  if (isFormControl(e.target)) return;   // typing in a field: don't hijack space
+  e.preventDefault();                    // no page scroll / native space step
+  togglePlay();
 });
 $('rngSpeed').addEventListener('input', e => S.speed = +e.target.value);
 $('rngT').addEventListener('input', e => {
   S.playing = false; btnPlay.textContent = '▶ play';
   S.t = S.t0 + (S.t1 - S.t0) * +e.target.value;
 });
-window.addEventListener('keydown', e => {
-  if (e.code === 'Space' && !e.target.matches('input,select')) { e.preventDefault(); btnPlay.click(); }
-});
-
 /* --- 3D interaction --- */
 function drag(cv, onMove) {
   let last = null;

@@ -1,0 +1,7 @@
+<!DOCTYPE html><html><head><meta charset="utf8"></head><body>
+<script>
+fetch('app.js').then(r=>r.text()).then(t=>{
+  try { new Function(t); console.log('SYNTAX_OK chars='+t.length); }
+  catch(e){ console.log('SYNTAX_ERR: '+e); }
+}).catch(e=>console.log('FETCH_ERR: '+e));
+</script></body></html>
